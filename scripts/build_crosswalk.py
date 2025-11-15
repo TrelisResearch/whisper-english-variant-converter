@@ -68,6 +68,7 @@ SOURCE_SPECS: List[SourceSpec] = [
         notes_field="notes",
     ),
 ]
+SOURCE_PRIORITY = {spec.name: idx for idx, spec in enumerate(SOURCE_SPECS)}
 
 
 def read_source(spec: SourceSpec) -> List[Dict[str, str]]:
@@ -93,12 +94,22 @@ def read_source(spec: SourceSpec) -> List[Dict[str, str]]:
             lemma = lemma.strip()
             notes = raw.get(spec.notes_field, "").strip() if spec.notes_field else ""
 
+            # Skip rows that do not provide both en_US and en_GB for spelling-only entries.
+            if spec.entry_type == "spelling_only":
+                us_value = normalized.get("en_US", "")
+                gb_value = normalized.get("en_GB", "")
+                if not (us_value and gb_value):
+                    continue
+                if us_value.lower() == gb_value.lower():
+                    continue
+
             rows.append(
                 {
                     "lemma": lemma or normalized.get("en_US") or normalized.get("en_GB"),
                     "source": spec.name,
                     "type": spec.entry_type,
                     "notes": notes,
+                    "_priority": SOURCE_PRIORITY.get(spec.name, len(SOURCE_PRIORITY)),
                     **normalized,
                 }
             )
@@ -137,6 +148,32 @@ def deduplicate(rows: Iterable[Dict[str, str]]) -> List[Dict[str, str]]:
     return output
 
 
+def collapse_rows(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    def priority(row: Dict[str, str]) -> int:
+        return row.get("_priority", len(SOURCE_PRIORITY))
+
+    rows = sorted(rows, key=lambda r: (priority(r), r.get("lemma") or ""))
+    seen_us: Dict[tuple, Dict[str, str]] = {}
+    seen_gb: Dict[tuple, Dict[str, str]] = {}
+    unique: List[Dict[str, str]] = []
+
+    for row in rows:
+        en_us = (row["type"], row.get("en_US", "").lower())
+        en_gb = (row["type"], row.get("en_GB", "").lower())
+        if not en_us[1] or not en_gb[1]:
+            continue
+        if en_us in seen_us or en_gb in seen_gb:
+            continue
+        unique.append(row)
+        seen_us[en_us] = row
+        seen_gb[en_gb] = row
+
+    for row in unique:
+        row.pop("_priority", None)
+
+    return unique
+
+
 def write_csv(path: Path, rows: List[Dict[str, str]]) -> None:
     if not rows:
         print(f"[build] No rows to write for {path.name}, skipping")
@@ -165,8 +202,9 @@ def main() -> None:
         all_rows.extend(read_source(spec))
 
     deduped_rows = deduplicate(all_rows)
-    spelling_rows = [row for row in deduped_rows if row["type"] == "spelling_only"]
-    lexical_rows = [row for row in deduped_rows if row["type"] == "lexical_choice"]
+    collapsed_rows = collapse_rows(deduped_rows)
+    spelling_rows = [row for row in collapsed_rows if row["type"] == "spelling_only"]
+    lexical_rows = [row for row in collapsed_rows if row["type"] == "lexical_choice"]
 
     spelling_path = DERIVED_DIR / "spelling_crosswalk.csv"
     lexical_path = DERIVED_DIR / "lexical_crosswalk.csv"

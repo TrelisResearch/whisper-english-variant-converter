@@ -1,5 +1,11 @@
 variant_id,lemma,type,en_US,en_GB,en_AU,en_CA,notes,source
-lexical_choice-00012,apartment,lexical_choice,apartment,flat,,,Primary residence / housing,breame_meanings
-lexical_choice-00013,truck,lexical_choice,truck,lorry,,,Vehicle / logistics,breame_meanings
-lexical_choice-00014,soccer,lexical_choice,soccer,football,,,Sport naming difference,breame_meanings
-lexical_choice-00015,cookie,lexical_choice,cookie,biscuit,,,Food naming difference,breame_meanings
+lexical_choice-01740,apartment,lexical_choice,apartment,flat,,,Primary residence / housing terminology,breame_meanings
+lexical_choice-01743,cookie,lexical_choice,cookie,biscuit,,,Food naming difference,breame_meanings
+lexical_choice-01747,diaper,lexical_choice,diaper,nappy,,,Baby care terminology,breame_meanings
+lexical_choice-01746,elevator,lexical_choice,elevator,lift,,,Building infrastructure naming,breame_meanings
+lexical_choice-01749,faucet,lexical_choice,faucet,tap,,,Plumbing terminology,breame_meanings
+lexical_choice-01748,flashlight,lexical_choice,flashlight,torch,,,Lighting terminology,breame_meanings
+lexical_choice-01744,gasoline,lexical_choice,gasoline,petrol,,,Fuel naming difference,breame_meanings
+lexical_choice-01745,sidewalk,lexical_choice,sidewalk,pavement,,,Pedestrian path naming,breame_meanings
+lexical_choice-01742,soccer,lexical_choice,soccer,football,,,Sport naming difference,breame_meanings
+lexical_choice-01741,truck,lexical_choice,truck,lorry,,,Vehicle / logistics terminology,breame_meanings
