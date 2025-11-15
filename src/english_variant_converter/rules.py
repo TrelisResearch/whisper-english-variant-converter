@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Dict
+from typing import Dict, Optional
 
 from .data_loader import VARIANT_FIELDS, load_crosswalk
+from .exception_policies import exception_policies
 
 SUPPORTED_VARIANTS = ("en_US", "en_GB", "en_AU", "en_CA")
 SUPPORTED_MODES = ("spelling_only", "spelling_and_lexical")
@@ -74,3 +75,19 @@ def convert_token(token: str, source: str, target: str, mode: str = "spelling_on
 
     pattern = _detect_case(token)
     return _apply_case(replacement, pattern)
+
+
+def is_swap_allowed(
+    original: str,
+    candidate: str,
+    prev_word: Optional[str],
+    next_word: Optional[str],
+) -> bool:
+    policy = exception_policies.classify(original, candidate)
+    if policy.action == "skip":
+        return False
+    if policy.action == "conditional":
+        prev_norm = (prev_word or "").lower() or None
+        next_norm = (next_word or "").lower() or None
+        return exception_policies.allow_conditional(policy.value or "", prev_norm, next_norm)
+    return True

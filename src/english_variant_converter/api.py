@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Iterable, Optional, Tuple
 
 from . import rules
 from .tokenizer import Token, tokenize
@@ -45,7 +45,8 @@ def _convert_internal(
     protected_tokens = 0
     converted_tokens = 0
 
-    for token in tokens:
+    prev_word: Optional[str] = None
+    for idx, token in enumerate(tokens):
         if not token.is_word:
             converted_chunks.append(token.text)
             continue
@@ -54,14 +55,31 @@ def _convert_internal(
         if token.is_protected:
             protected_tokens += 1
             converted_chunks.append(token.text)
+            prev_word = token.text.lower()
             continue
 
+        next_word: Optional[str] = None
+        future_idx = idx + 1
+        while future_idx < len(tokens):
+            future = tokens[future_idx]
+            if future.is_word:
+                next_word = future.text.lower()
+                break
+            future_idx += 1
+
         converted = rules.convert_token(token.text, source=source, target=target, mode=mode)
-        converted_chunks.append(converted)
         if converted != token.text:
-            converted_tokens += 1
-            key = (token.text.lower(), converted.lower())
-            swaps[key] = swaps.get(key, 0) + 1
+            if not rules.is_swap_allowed(token.text, converted, prev_word, next_word):
+                converted = token.text
+            else:
+                converted_tokens += 1
+                key = (token.text.lower(), converted.lower())
+                swaps[key] = swaps.get(key, 0) + 1
+
+        converted_chunks.append(converted)
+
+        if not token.is_protected:
+            prev_word = token.text.lower()
 
     stats = ConversionStats(
         total_tokens=total_tokens,

@@ -6,7 +6,7 @@ Convert transcripts or free-form English text between spelling variants (US, UK,
 - **CLI**: `uv run evc --from en_US --to en_GB < input.txt > output.txt`
 - **Swap stats**: add `--stats` (table) or `--stats json` for machine-readable QA outputs.
 - **Default behavior**: `mode="spelling_only"` (lexical swaps are opt-in via `--mode spelling_and_lexical`).
-- **Limitations**: pure spelling swaps cannot disambiguate verbs vs. nouns (e.g., “check” → “cheque” will also change “checked/chequed”). Review critical outputs manually if those words appear often in your transcripts.
+- **Limitations**: Ambiguous pairs are guarded by exception policies (e.g., `practice/practise` stays untouched and `check/cheque` swaps only in noun contexts), but the heuristics are intentionally simple—review outputs when uncommon noun/verb collisions or domain-specific spellings appear frequently.
 
 >[!TIP]
 >Run `uv run evc -h` for all options
@@ -17,6 +17,20 @@ Convert transcripts or free-form English text between spelling variants (US, UK,
 2. These CSVs ship inside the package (`src/english_variant_converter/data/*.csv`).
 3. At runtime, `rules.py` loads the CSVs into bidirectional maps and `tokenizer.py` splits Whisper-style text while protecting URLs, email handles, hashtags, code spans, and CamelCase names that should stay untouched.
 4. `english_variant_converter.convert(...)` walks each token, applies mappings, and (optionally) returns stats showing how many swaps happened.
+
+### Swap policies
+
+- `data/exceptions/spelling_exceptions.csv` defines per-word policies with three modes:
+  - `skip`: never convert this US/UK pair (e.g., `license/licence`, `meter/metre`, `disk/disc`).
+  - `conditional:<rule>`: only convert when a simple heuristic passes. Currently supported rule:
+    - `conditional:check_noun` — swap `check/cheque` (and inflections) only when the word looks like a noun (e.g., “a check”, `check number`) rather than the verb “to check”.
+  - (default) any pair not listed follows the standard spelling crosswalk.
+- After editing the exceptions file, run:
+  ```bash
+  uv run python scripts/build_crosswalk.py
+  uv run python scripts/verify_crosswalk.py
+  ```
+  to regenerate the crosswalk and sync the exceptions into `src/english_variant_converter/data/exceptions/`.
 
 ## Getting started
 
@@ -80,7 +94,7 @@ uv run evc --from en_GB --to en_US --stats table \
   < "${BASE}.txt" \
   > "${BASE}-us_transcription.txt"
 ```
-or go from a uk transcript to uk english (i.e. fix errors)
+or go from a uk transcript to uk english (i.e. fix errors):
 ```bash
 BASE="samples/transcripts/uk_english-uk_accent"
 
@@ -88,7 +102,6 @@ uv run evc --from en_US --to en_GB --stats table \
   < "${BASE}.txt" \
   > "${BASE}-uk_transcription.txt"
 ```
-Note that this only erroneously makes a swap...
 or go from a us transcript to us english (i.e. fix errors)
 ```bash
 BASE="samples/transcripts/us_english-us_accent"

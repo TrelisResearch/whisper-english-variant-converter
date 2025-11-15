@@ -9,13 +9,15 @@ Usage:
 from __future__ import annotations
 
 import csv
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Set, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 DERIVED_DIR = ROOT / "data" / "derived"
 PACKAGE_DATA_DIR = ROOT / "src" / "english_variant_converter" / "data"
+EXCEPTIONS_PATH = ROOT / "data" / "exceptions" / "spelling_exceptions.csv"
 
 VARIANT_FIELDS = ("en_US", "en_GB", "en_AU", "en_CA")
 
@@ -69,6 +71,7 @@ SOURCE_SPECS: List[SourceSpec] = [
     ),
 ]
 SOURCE_PRIORITY = {spec.name: idx for idx, spec in enumerate(SOURCE_SPECS)}
+SKIP_EXCEPTIONS: Set[Tuple[str, str]] = set()
 
 
 def read_source(spec: SourceSpec) -> List[Dict[str, str]]:
@@ -102,6 +105,11 @@ def read_source(spec: SourceSpec) -> List[Dict[str, str]]:
                     continue
                 if us_value.lower() == gb_value.lower():
                     continue
+
+            us_value = normalized.get("en_US", "")
+            gb_value = normalized.get("en_GB", "")
+            if should_skip_pair(us_value, gb_value):
+                continue
 
             rows.append(
                 {
@@ -196,7 +204,39 @@ def copy_to_package(source_path: Path) -> None:
     print(f"[build] Synced {source_path.name} → {destination}")
 
 
+def copy_exceptions_to_package() -> None:
+    if not EXCEPTIONS_PATH.exists():
+        return
+    destination_dir = PACKAGE_DATA_DIR / "exceptions"
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    destination = destination_dir / EXCEPTIONS_PATH.name
+    destination.write_bytes(EXCEPTIONS_PATH.read_bytes())
+    print(f"[build] Synced spelling exceptions → {destination}")
+
+
+def load_exception_policies() -> None:
+    if not EXCEPTIONS_PATH.exists():
+        return
+    with EXCEPTIONS_PATH.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            policy = (row.get("policy") or "").strip().lower()
+            if policy != "skip":
+                continue
+            us = (row.get("en_US") or "").strip().lower()
+            gb = (row.get("en_GB") or "").strip().lower()
+            if us and gb:
+                SKIP_EXCEPTIONS.add((us, gb))
+
+
+def should_skip_pair(us_value: str, gb_value: str) -> bool:
+    if not us_value or not gb_value:
+        return False
+    return (us_value.lower(), gb_value.lower()) in SKIP_EXCEPTIONS
+
+
 def main() -> None:
+    load_exception_policies()
     all_rows: List[Dict[str, str]] = []
     for spec in SOURCE_SPECS:
         all_rows.extend(read_source(spec))
@@ -216,6 +256,7 @@ def main() -> None:
         copy_to_package(spelling_path)
     if lexical_rows:
         copy_to_package(lexical_path)
+    copy_exceptions_to_package()
 
 
 if __name__ == "__main__":

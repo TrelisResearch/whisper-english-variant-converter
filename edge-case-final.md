@@ -1,0 +1,65 @@
+# Consolidated High-Risk Spelling Swaps
+
+- `disk → disc` (UK still prefers “disk” in computing contexts; swapping can break technical text).
+- `draft/drafting/drafty → draught…` (UK uses “draught” for airflow or beer; the verb “to draft” should not change).
+- `filter/filters → philtre/philtres` (philtre is archaic; leave filters alone).
+- `flier / flyer → flyer / flier` (entry is symmetric and can flip existing preferred spellings).
+- `license/licence` family (UK uses licen**c**e for the noun, licen**s**e for the verb—blanket swaps will break verbs like “to license”).
+- `meter/metre` (metre = unit, meter = measuring device; transcripts often reference electric/gas meters).
+- `story/stories → storey/storeys` (only building levels take “storey”; narrative “story” must stay).
+- `snowplow` family (verbs like “to plow through” should not gain the “plough” spelling).
+- `siphon → syphon` (both spellings exist in UK; no need to change scientific terms).
+- `tire/tires/tired → tyre/tyres/tyred` (tyre is the noun on a wheel; the verb “to tire” must remain).
+- `ton/tons → tonne/tonnes` (ton = imperial weight; tonne = metric. Converting blindly alters quantities).
+- `ass/asses → arse/arses` (changes references to donkeys as well as idioms like “kick some ass”).
+- `bark/barked/barking → barque…` (barque is only the sailing ship; dog/tree “bark” should not change).
+- `curb/curbing/curbs → kerb…` (kerb is the noun for pavement edge; verb “to curb” should stay).
+- `drought/droughts → drouth/drouthes` (drouth is archaic; swapping modern transcripts would be odd).
+- `gibe ↔ jibe` (these have different meanings in modern usage: “jibe with” vs “gibe at”; swapping could invert intent).
+- (General note: this chunk is mostly scientific pairs; low-risk for everyday ASR but keep an eye on nautical “hallooed/holloaed”.)
+- `naught/naughts → nought/noughts` (expressions like “for naught” should remain; “nought” usually denotes the digit zero).
+- `gibe/jibe` variants repeat; also `niter/nitre` etc. Nothing new beyond previous warnings.
+- `sake/sakes → saki/sakis` (misidentifies “for your sake” as the Japanese drink “saki”).
+- `orang → ourang` (touches shortened references to orangutans; best left alone).
+- `plow/plowing` family repeats here—same concerns as chunk 3.
+- `phonies → phoneys` (stylistic preference; probably harmless but worth flagging).
+- `plowboy/plowshare` etc. still appear—see earlier notes.
+- `specialty/specialties → speciality/specialities` (UK uses both; swapping may look odd in medical/business contexts).
+- `snowplow's / snowplows` continue; treat as previously noted.
+- `whiskey/whiskeys → whisky/whiskies` (Irish/US brands spell it “whiskey”; automatic conversion is wrong outside Scotch references).
+- Numerous “favor/unfavor” inflected forms—covered by earlier license/favour caveat.
+- `practice/practise` family (noun vs verb in UK usage).
+- `check/checked/checks → cheque/chequed/cheques` (verb/noun collision).
+- `disk/disc` (tech contexts prefer “disk” globally).
+- `license/licence` (UK verb still “license”).
+- `meter/metre` (device vs unit).
+- `flier/flyer` entry that flips the forms.
+- `story/stories → storey/storeys`.
+- `snowplow/plow variants`.
+- `siphon → syphon` (scientific spelling already acceptable in UK).
+- `tire/tires/tired → tyre/tyres/tyred`.
+- `ton/tons → tonne/tonnes`.
+- `ass/asses → arse/arses`.
+- `bark/barked/barking → barque…`.
+- `orang → ourang`.
+- `plowboy/plowshare` (same reasoning as snowplow).
+- `curb/curbing/curbs → kerb…`.
+- `drought/droughts → drouth/drouthes`.
+- `gibe/jibe` (same caution as chunk 3).
+- `gibe/jibe` entries appear again; keep flagged.
+- `naught/naughts → nought/noughts` (idioms vs numerals).
+- `specialty/specialty → speciality/…` (depends on industry).
+- `sake/sakes → saki/sakis`.
+- `orangutans shortened as “orang”` repeated here.
+- `plow/plowing` variants again.
+- `siphon/syphon` repeats—keep a single rule to skip those.
+- `whiskey/whiskeys → whisky/whiskies`.
+- `assorted “colorful/colorless” derivatives` — might be ok but review before blanket swap in UI copy.
+- `phonies → phoneys` (US/UK publications both use “phony/phony” nowadays).
+- `practice/practicer` derivatives still present (verbs vs nouns).
+- `specialty/specialties` again.
+- `snowplow's/snowplows` again.
+- `curb/kerb derivatives` again.
+- `whiskey/whisky` variations (brands/cocktail references should stay as authored).
+- `favor/unfavor` inflected sets (business/legal docs sometimes require US spelling even in UK text).
+- `willful → wilful` (legal terms may require “willful” in UK statutes too).

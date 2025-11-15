@@ -40,4 +40,4 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-"english_variant_converter" = ["data/*.csv"]
+"english_variant_converter" = ["data/*.csv", "data/exceptions/*.csv"]
