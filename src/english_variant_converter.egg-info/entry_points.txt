@@ -1,0 +1,2 @@
+[console_scripts]
+evc = english_variant_converter.cli:main

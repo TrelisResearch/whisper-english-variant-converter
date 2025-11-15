@@ -1,0 +1,40 @@
+Metadata-Version: 2.4
+Name: english-variant-converter
+Version: 0.1.0
+Summary: Convert English text between spelling variants (US, UK, AU, CA, ...).
+Author: Trelis Research
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: LICENSE_NOTES.md
+License-File: NOTICE.md
+Provides-Extra: test
+Requires-Dist: pytest>=8.2; extra == "test"
+Requires-Dist: pytest-cov>=5.0; extra == "test"
+Dynamic: license-file
+
+# english-variant-converter
+
+Convert transcripts or free-form English text between spelling variants (US, UK, AU, CA, ...).
+
+- **Library API**: `english_variant_converter.convert(text, source="en_US", target="en_GB")`
+- **CLI**: `uv run evc --from en_US --to en_GB < input.txt > output.txt`
+- **Swap stats**: add `--stats` (table) or `--stats json` for machine-readable QA outputs.
+
+## Getting started
+
+```bash
+uv sync  # install deps declared in pyproject
+uv run pytest
+```
+
+The project ships with a small default crosswalk built from the permissively licensed
+uk2us + Breame datasets. To refresh the derived data after updating the raw CSVs, run:
+
+```bash
+uv run python scripts/build_crosswalk.py
+uv run python scripts/verify_crosswalk.py
+```
+
+More context lives in [`build.md`](build.md).

@@ -1,0 +1,16 @@
+variant_id,lemma,type,en_US,en_GB,en_AU,en_CA,notes,source
+spelling_only-00001,color,spelling_only,color,colour,,,,uk2us
+spelling_only-00002,organize,spelling_only,organize,organise,,,,uk2us
+spelling_only-00003,theater,spelling_only,theater,theatre,,,,uk2us
+spelling_only-00004,analyze,spelling_only,analyze,analyse,,,,uk2us
+spelling_only-00005,license,spelling_only,license,licence,,,,uk2us
+spelling_only-00006,harbor,spelling_only,harbor,harbour,,,,uk2us
+spelling_only-00007,neighbor,spelling_only,neighbor,neighbour,,,,uk2us
+spelling_only-00008,apologize,spelling_only,apologize,apologise,,,,breame_spellings
+spelling_only-00009,favor,spelling_only,favor,favour,,,,breame_spellings
+spelling_only-00010,kilogram,spelling_only,kilogram,kilogramme,,,,breame_spellings
+spelling_only-00011,discolor,spelling_only,discolor,discolour,,,,breame_spellings
+spelling_only-00016,center,spelling_only,center,centre,centre,centre,,scowl_varcon
+spelling_only-00017,program,spelling_only,program,programme,programme,program,,scowl_varcon
+spelling_only-00018,kilometer,spelling_only,kilometer,kilometre,kilometre,kilometre,,scowl_varcon
+spelling_only-00019,coloration,spelling_only,coloration,colouration,colouration,colouration,,scowl_varcon

@@ -1,0 +1,5 @@
+variant_id,lemma,type,en_US,en_GB,en_AU,en_CA,notes,source
+lexical_choice-00012,apartment,lexical_choice,apartment,flat,,,Primary residence / housing,breame_meanings
+lexical_choice-00013,truck,lexical_choice,truck,lorry,,,Vehicle / logistics,breame_meanings
+lexical_choice-00014,soccer,lexical_choice,soccer,football,,,Sport naming difference,breame_meanings
+lexical_choice-00015,cookie,lexical_choice,cookie,biscuit,,,Food naming difference,breame_meanings
