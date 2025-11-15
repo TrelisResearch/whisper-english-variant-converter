@@ -1,4 +1,4 @@
-# english-variant-converter
+# English Variant Converter
 
 Convert transcripts or free-form English text between spelling variants (US, UK, AU, CA, ...).
 
@@ -6,6 +6,10 @@ Convert transcripts or free-form English text between spelling variants (US, UK,
 - **CLI**: `uv run evc --from en_US --to en_GB < input.txt > output.txt`
 - **Swap stats**: add `--stats` (table) or `--stats json` for machine-readable QA outputs.
 - **Default behavior**: `mode="spelling_only"` (lexical swaps are opt-in via `--mode spelling_and_lexical`).
+- **Limitations**: pure spelling swaps cannot disambiguate verbs vs. nouns (e.g., “check” → “cheque” will also change “checked/chequed”). Review critical outputs manually if those words appear often in your transcripts.
+
+>[!TIP]
+>Run `uv run evc -h` for all options
 
 ## How it works
 
@@ -46,7 +50,9 @@ sh ./models/download-ggml-model.sh large-v3-turbo-q8_0
 
 cd ../
 
-./whisper.cpp/build/bin/whisper-cli -m whisper.cpp/models/ggml-large-v3-turbo-q8_0.bin -f samples/us_english-us_accent.mp3 --output-file samples/transcripts/us_english-us_accent -otxt -ovtt -osrt
+./whisper.cpp/build/bin/whisper-cli -m whisper.cpp/models/ggml-large-v3-turbo-q8_0.bin -f samples/us_english-us_accent.mp3 --output-file samples/transcripts/us_english-us_accent -otxt
+
+./whisper.cpp/build/bin/whisper-cli -m whisper.cpp/models/ggml-large-v3-turbo-q8_0.bin -f samples/uk_english-uk_accent.mp3 --output-file samples/transcripts/uk_english-uk_accent -otxt
 ```
 
 Once you have a transcript file, run it through the converter. Examples:
@@ -65,4 +71,29 @@ uv run evc --from en_US --to en_GB --stats table \
 uv run evc --from en_US --to en_GB \
   < "${BASE}.vtt" \
   > "${BASE}-uk_transcription.vtt"
+```
+or go from US to UK English:
+```bash
+BASE="samples/transcripts/uk_english-uk_accent"
+
+uv run evc --from en_GB --to en_US --stats table \
+  < "${BASE}.txt" \
+  > "${BASE}-us_transcription.txt"
+```
+or go from a uk transcript to uk english (i.e. fix errors)
+```bash
+BASE="samples/transcripts/uk_english-uk_accent"
+
+uv run evc --from en_US --to en_GB --stats table \
+  < "${BASE}.txt" \
+  > "${BASE}-uk_transcription.txt"
+```
+Note that this only erroneously makes a swap...
+or go from a us transcript to us english (i.e. fix errors)
+```bash
+BASE="samples/transcripts/us_english-us_accent"
+
+uv run evc --from en_GB --to en_US --stats table \
+  < "${BASE}.txt" \
+  > "${BASE}-us_transcription.txt"
 ```
