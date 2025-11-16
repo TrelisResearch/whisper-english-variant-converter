@@ -6,7 +6,7 @@ Convert transcripts or free-form English text between spelling variants (US, UK,
 - **CLI**: `uv run evc --from en_US --to en_GB < input.txt > output.txt`
 - **Swap stats**: add `--stats` (table) or `--stats json` for machine-readable QA outputs.
 - **Default behavior**: `mode="spelling_only"` (lexical swaps are opt-in via `--mode spelling_and_lexical`).
-- **Limitations**: Ambiguous pairs are guarded by exception policies (e.g., `practice/practise` stays untouched and `check/cheque` swaps only in noun contexts), but the heuristics are intentionally simple—review outputs when uncommon noun/verb collisions or domain-specific spellings appear frequently.
+- **Limitations**: Ambiguous pairs are guarded by exception policies (e.g., `practice/practise` stays untouched and `check/cheque` swaps only in noun contexts), but the heuristics are intentionally simple—review outputs when uncommon noun/verb collisions or domain-specific spellings appear frequently. The converter also sticks to spelling/lexical swaps and does not change locale-specific date/time formats or phrasing (e.g., `MM/DD/YYYY` vs `DD/MM/YYYY`, “February 5” vs “5th of February”, or US/UK differences such as including “the” before dates).
 
 >[!TIP]
 >Run `uv run evc -h` for all options

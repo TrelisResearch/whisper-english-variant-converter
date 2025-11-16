@@ -60,3 +60,7 @@ Implementation idea:
 - Conditional entries would point to simple heuristics (regex, adjacency checks) implemented in the normalizer.
 
 Once we agree on the policy, I’ll update the CSV to mark each entry as `skip` or `configurable`, and wire the build/runtime logic accordingly.
+
+### Non-goals for now
+
+- Locale-specific date/time conventions (e.g., `07/09/2024` vs `09/07/2024`, 12-hour vs 24-hour clock, ordinal suffixes, “February 5” vs “5th of February”, or including “the” before dates) are explicitly out of scope for the converter. We only touch spelling/lexical swaps, so transcripts that need localized formatting or phrasing must be post-processed separately.
